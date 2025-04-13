@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PharmacySearch from "@/components/pharmacy/PharmacySearch";
 import PharmacyCard, { PharmacyProps } from "@/components/pharmacy/PharmacyCard";
+import PharmacyMap from "@/components/pharmacy/PharmacyMap";
 import { Loader2, MapPin, List, MapIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
@@ -184,21 +184,7 @@ const Pharmacies = () => {
               )}
             </div>
           ) : (
-            <div className="bg-gray-200 rounded-lg h-[60vh] flex items-center justify-center">
-              <div className="text-center p-8">
-                <MapIcon size={48} className="mx-auto text-gray-500 mb-4" />
-                <h3 className="text-xl font-medium text-gray-800 mb-2">Map View</h3>
-                <p className="text-gray-600 mb-4">
-                  Map integration will be available in the next update.
-                </p>
-                <Button
-                  onClick={() => setViewMode("list")}
-                  className="bg-medical-blue hover:bg-medical-lightBlue"
-                >
-                  Switch to List View
-                </Button>
-              </div>
-            </div>
+            <PharmacyMap pharmacies={filteredPharmacies} />
           )}
         </div>
       </main>

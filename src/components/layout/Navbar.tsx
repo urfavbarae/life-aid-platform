@@ -1,14 +1,26 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Search, MapPin, Pill, Heart, User } from "lucide-react";
+import { Menu, X, MapPin, Pill, Heart, User, AlertOctagon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  
+  const handleEmergency = () => {
+    toast({
+      title: "Emergency",
+      description: "Calling emergency services...",
+      variant: "destructive",
+      duration: 5000,
+    });
+  };
 
   const menuItems = [
     { name: "Find Pharmacies", icon: <MapPin size={18} />, path: "/pharmacies" },
@@ -40,9 +52,49 @@ const Navbar: React.FC = () => {
                 <span>{item.name}</span>
               </Link>
             ))}
-            <Button className="bg-medical-blue hover:bg-medical-lightBlue text-white">
-              Emergency
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-medical-red hover:bg-red-600 text-white font-bold">
+                  <AlertOctagon className="mr-2" size={18} />
+                  Emergency
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-center text-2xl">Emergency Services</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                  <div className="grid gap-6">
+                    <div className="bg-medical-red/10 p-4 rounded-lg">
+                      <h3 className="font-bold text-lg mb-2">Call Emergency Number</h3>
+                      <p className="mb-4">If this is a life-threatening emergency, please call:</p>
+                      <a 
+                        href="tel:911" 
+                        className="bg-medical-red text-white py-3 px-4 rounded-lg font-bold text-center block hover:bg-red-600 transition-colors"
+                        onClick={handleEmergency}
+                      >
+                        Call 911
+                      </a>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Other Emergency Services</h3>
+                      <div className="grid gap-3">
+                        <Button variant="outline" className="justify-start">
+                          Find Nearest Hospital
+                        </Button>
+                        <Button variant="outline" className="justify-start">
+                          Poison Control: (800) 222-1222
+                        </Button>
+                        <Button variant="outline" className="justify-start">
+                          Mental Health Crisis: (988)
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Mobile menu button */}
@@ -73,9 +125,49 @@ const Navbar: React.FC = () => {
               <span>{item.name}</span>
             </Link>
           ))}
-          <Button className="bg-medical-blue hover:bg-medical-lightBlue text-white w-full">
-            Emergency
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-medical-red hover:bg-red-600 text-white w-full font-bold">
+                <AlertOctagon className="mr-2" size={18} />
+                Emergency
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-center text-2xl">Emergency Services</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <div className="grid gap-6">
+                  <div className="bg-medical-red/10 p-4 rounded-lg">
+                    <h3 className="font-bold text-lg mb-2">Call Emergency Number</h3>
+                    <p className="mb-4">If this is a life-threatening emergency, please call:</p>
+                    <a 
+                      href="tel:911" 
+                      className="bg-medical-red text-white py-3 px-4 rounded-lg font-bold text-center block hover:bg-red-600 transition-colors"
+                      onClick={handleEmergency}
+                    >
+                      Call 911
+                    </a>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">Other Emergency Services</h3>
+                    <div className="grid gap-3">
+                      <Button variant="outline" className="justify-start">
+                        Find Nearest Hospital
+                      </Button>
+                      <Button variant="outline" className="justify-start">
+                        Poison Control: (800) 222-1222
+                      </Button>
+                      <Button variant="outline" className="justify-start">
+                        Mental Health Crisis: (988)
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </nav>
