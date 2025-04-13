@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, MapPin, Pill, Heart, User, AlertOctagon } from "lucide-react";
+import { Menu, X, MapPin, Pill, Heart, User, AlertOctagon, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,7 @@ const Navbar: React.FC = () => {
     { name: "Find Pharmacies", icon: <MapPin size={18} />, path: "/pharmacies" },
     { name: "Medicine Search", icon: <Pill size={18} />, path: "/medicines" },
     { name: "Blood Donation", icon: <Heart size={18} />, path: "/blood-donation" },
+    { name: "AI Assistant", icon: <Bot size={18} />, path: "/ai-assistant" },
     { name: "Account", icon: <User size={18} />, path: "/account" },
   ];
 
