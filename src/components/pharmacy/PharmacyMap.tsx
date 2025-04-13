@@ -16,7 +16,8 @@ const PharmacyMap: React.FC<PharmacyMapProps> = ({ pharmacies }) => {
   const { toast } = useToast();
   
   // Mock coordinates for demo purposes - in a real app these would come from the pharmacy data
-  const pharmacyCoordinates = [
+  // Explicitly typed as [number, number][] to ensure TypeScript knows these are valid LngLat pairs
+  const pharmacyCoordinates: [number, number][] = [
     [-118.243683, 34.052235], // Los Angeles
     [-118.4912, 34.0195], // Santa Monica
     [-118.3287, 34.0983], // Hollywood
@@ -50,7 +51,11 @@ const PharmacyMap: React.FC<PharmacyMapProps> = ({ pharmacies }) => {
       // Add pharmacy markers
       map.current.on("load", () => {
         pharmacies.forEach((pharmacy, index) => {
-          const coordinates = pharmacyCoordinates[index] || [-118.243683, 34.052235];
+          // Default coordinates if index is out of bounds
+          const coordinates: [number, number] = 
+            index < pharmacyCoordinates.length 
+              ? pharmacyCoordinates[index]
+              : [-118.243683, 34.052235]; // Default to LA if no coordinates
           
           // Create marker element
           const el = document.createElement("div");
