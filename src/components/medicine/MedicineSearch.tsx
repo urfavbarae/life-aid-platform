@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,31 +11,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface FilterValues {
+  category: string;
+  priceRange: string;
+  availability: string;
+}
+
 interface MedicineSearchProps {
-  onSearch: (query: string, filters: any) => void;
+  onSearch: (query: string, filters: FilterValues) => void;
 }
 
 const MedicineSearch: React.FC<MedicineSearchProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FilterValues>({
     category: "",
     priceRange: "",
     availability: "",
   });
   
+  // Effect to trigger search when filters change
+  useEffect(() => {
+    // Only trigger search if any filter has a value
+    if (filters.category || filters.priceRange || filters.availability) {
+      onSearch(searchTerm, filters);
+    }
+  }, [filters]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      onSearch(searchTerm.trim(), filters);
-    }
+    onSearch(searchTerm.trim(), filters);
   };
   
   const clearSearch = () => {
     setSearchTerm("");
+    // If we had active filters, trigger a new search with empty query
+    if (filters.category || filters.priceRange || filters.availability) {
+      onSearch("", filters);
+    }
   };
   
-  const updateFilter = (key: string, value: string) => {
+  const updateFilter = (key: keyof FilterValues, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
   
@@ -44,11 +60,13 @@ const MedicineSearch: React.FC<MedicineSearchProps> = ({ onSearch }) => {
   };
   
   const resetFilters = () => {
-    setFilters({
+    const resetFilterValues = {
       category: "",
       priceRange: "",
       availability: "",
-    });
+    };
+    setFilters(resetFilterValues);
+    onSearch(searchTerm, resetFilterValues);
   };
   
   return (
@@ -88,6 +106,11 @@ const MedicineSearch: React.FC<MedicineSearchProps> = ({ onSearch }) => {
           >
             <Filter size={18} className="mr-2" />
             Filters
+            {(filters.category || filters.priceRange || filters.availability) && (
+              <span className="ml-2 bg-medical-blue text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                {Object.values(filters).filter(Boolean).length}
+              </span>
+            )}
           </Button>
         </div>
         
@@ -104,10 +127,10 @@ const MedicineSearch: React.FC<MedicineSearchProps> = ({ onSearch }) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="antibiotics">Antibiotics</SelectItem>
-                  <SelectItem value="painkillers">Painkillers</SelectItem>
-                  <SelectItem value="vitamins">Vitamins & Supplements</SelectItem>
-                  <SelectItem value="skincare">Skincare</SelectItem>
-                  <SelectItem value="diabetes">Diabetes Care</SelectItem>
+                  <SelectItem value="pain relief">Pain Relief</SelectItem>
+                  <SelectItem value="vitamins & supplements">Vitamins & Supplements</SelectItem>
+                  <SelectItem value="allergy">Allergy</SelectItem>
+                  <SelectItem value="blood pressure">Blood Pressure</SelectItem>
                 </SelectContent>
               </Select>
             </div>

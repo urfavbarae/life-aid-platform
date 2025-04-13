@@ -1,11 +1,11 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MedicineSearch from "@/components/medicine/MedicineSearch";
 import MedicineCard, { MedicineProps } from "@/components/medicine/MedicineCard";
 import { Loader2 } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination";
+import { useToast } from "@/components/ui/use-toast";
 
 // Mock data for demo purposes
 const mockMedicines: MedicineProps[] = [
@@ -69,18 +69,69 @@ const mockMedicines: MedicineProps[] = [
 const Medicines = () => {
   const [loading, setLoading] = useState(false);
   const [medicines, setMedicines] = useState<MedicineProps[]>(mockMedicines);
+  const [filteredMedicines, setFilteredMedicines] = useState<MedicineProps[]>(mockMedicines);
+  const { toast } = useToast();
   
-  const handleSearch = (query: string, filters: any) => {
+  const handleSearch = (query: string, filters: {
+    category: string;
+    priceRange: string;
+    availability: string;
+  }) => {
     setLoading(true);
     
-    // Simulate API call delay
     setTimeout(() => {
-      // For now, just using mock data
-      // In a real app, this would filter based on the query and filters
       console.log("Searching for medicines with:", query, filters);
       
+      let results = [...medicines];
+      
+      // Filter by search query
+      if (query) {
+        results = results.filter(medicine => 
+          medicine.name.toLowerCase().includes(query.toLowerCase()) || 
+          medicine.description.toLowerCase().includes(query.toLowerCase()) ||
+          medicine.manufacturer.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+      
+      // Filter by category
+      if (filters.category) {
+        results = results.filter(medicine => 
+          medicine.category.toLowerCase() === filters.category.toLowerCase()
+        );
+      }
+      
+      // Filter by price range
+      if (filters.priceRange) {
+        const [min, max] = filters.priceRange.split('-').map(Number);
+        results = results.filter(medicine => {
+          if (max) {
+            return medicine.price >= min && medicine.price <= max;
+          } else {
+            // Handle "100+" case
+            return medicine.price >= min;
+          }
+        });
+      }
+      
+      // Filter by availability
+      if (filters.availability) {
+        if (filters.availability === 'in-stock') {
+          results = results.filter(medicine => medicine.inStock);
+        }
+        // Other availability filters can be implemented here
+      }
+      
+      setFilteredMedicines(results);
       setLoading(false);
-    }, 1500);
+      
+      // Show toast notification with results count
+      toast({
+        title: `${results.length} medicines found`,
+        description: results.length > 0 
+          ? "Showing filtered results based on your search criteria." 
+          : "No medicines match your search criteria. Try adjusting your filters.",
+      });
+    }, 1000);
   };
   
   return (
@@ -105,13 +156,22 @@ const Medicines = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              {medicines.map((medicine) => (
-                <MedicineCard key={medicine.id} {...medicine} />
-              ))}
+              {filteredMedicines.length > 0 ? (
+                filteredMedicines.map((medicine) => (
+                  <MedicineCard key={medicine.id} {...medicine} />
+                ))
+              ) : (
+                <div className="py-16 text-center">
+                  <p className="text-lg text-gray-600">No medicines found matching your criteria.</p>
+                  <p className="text-gray-500 mt-2">Try adjusting your search or filters.</p>
+                </div>
+              )}
               
-              <div className="py-6 flex justify-center">
-                <Pagination />
-              </div>
+              {filteredMedicines.length > 0 && (
+                <div className="py-6 flex justify-center">
+                  <Pagination />
+                </div>
+              )}
             </div>
           )}
         </div>
