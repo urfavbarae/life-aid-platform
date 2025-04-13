@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Pharmacies from "./pages/Pharmacies";
 import Medicines from "./pages/Medicines";
 import BloodDonation from "./pages/BloodDonation";
+import AiAssistant from "./pages/AiAssistant";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/pharmacies" element={<Pharmacies />} />
           <Route path="/medicines" element={<Medicines />} />
           <Route path="/blood-donation" element={<BloodDonation />} />
+          <Route path="/ai-assistant" element={<AiAssistant />} />
           <Route path="/account" element={<Account />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Pill, Heart, ArrowRight, Star } from "lucide-react";
+import { Search, MapPin, Pill, Heart, ArrowRight, Star, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -79,12 +79,25 @@ const Index = () => {
               </div>
               
               <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Bot size={28} className="text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">AI Medical Assistant</h3>
+                <p className="text-gray-600 mb-6">
+                  Get instant answers about medications, side effects, and usage guidelines from our AI-powered assistant.
+                </p>
+                <Button asChild variant="outline" className="text-purple-600 border-purple-600 hover:bg-purple-50">
+                  <Link to="/ai-assistant">Ask AI Assistant</Link>
+                </Button>
+              </div>
+              
+              <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Heart size={28} className="text-medical-red" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Blood Donation</h3>
                 <p className="text-gray-600 mb-6">
-                  Connect blood donors with recipients. Create or respond to blood donation requests in your area.
+                  Find blood donation centers near you. Learn about the donation process and blood types needed.
                 </p>
                 <Button asChild variant="outline" className="text-medical-red border-medical-red hover:bg-red-50">
                   <Link to="/blood-donation">Blood Donation</Link>
